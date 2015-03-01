@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = 'lab3';
+$route['default_controller'] = 'lab5';
 $route['404_override'] = '';
 
 
