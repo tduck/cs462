@@ -1,15 +1,10 @@
-<html>
-<head>
-	
-	<title>tduck - Lab 5</title>
-	<link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
-</head>
-<body>
 	<div class="container">
 
-	<h3>tduck - Lab 5</h3>
+
+	<div>
+		<h3>tduck - Lab 5</h3>
+	</div>
 
 	<div>
 		<h5>Send a Message</h5>
@@ -20,8 +15,29 @@
 		</form>
 	</div>
 
+	<hr>
 
-	<div id="messages">
+	<div>
+		<h5>Add a Peer</h5>
+		<form action="<?php ?>" method="POST">
+			<table>
+				<tr>
+					<td>Name:</td>
+					<td style="padding-left:20px"><input type="text" name="peer_name"></input></td>
+				</tr>
+				<tr>
+					<td>URL:</td>
+					<td style="padding-left:20px"><input type="text" name="url"></input></td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit">
+		</form>
+	</div>
+
+	<hr>
+
+	<div id="messages" style="padding-bottom:20px">
 		<h5>Messages Received</h5>
 		<?php ?>
 	</div>

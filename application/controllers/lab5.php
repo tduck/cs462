@@ -20,15 +20,74 @@ class Lab5 extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view("view_messages");
+		if (!file_exists('messages.json'))
+		{
+			$fh = fopen('messages.json', 'a');
+			fclose($fh);
+		}
+
+		$json = json_decode(file_get_contents('messages.json'), true);
+
+		$this->load->view("header");
+		$this->load->view("view_messages", array("messages" => $json));
+	}
+
+	public function add_peer()
+	{
+		if ($post = $this->input->post())
+		{
+
+		}
+
+		$this->index();
 	}
 
 	public function receive_message()
 	{
+		/*
+		Propagating Rumors
+			Each node will run the following message propagation algorithm:
+
+			while true {
+			  q = getPeer(state)                    
+			  s = prepareMsg(state, q)       
+			  <url> = lookup(q)
+			  send (<url>, s)                 
+			  sleep n
+			}
+			Each node will also provide an HTTP endpoint that responds to POST of valid messages in the following way:
+
+			t = getMessage();
+			if (  isRumor(t)  ) {
+			     store(t)
+			} elsif ( isWant(t) ) {
+			    work_queue = addWorkToQueue(t)
+			    foreach w work_queue {
+			      s = prepareMsg(state, w)
+			      <url> = getUrl(w)
+			      send(<url>, s)
+			      state = update(state, s)
+			    }
+			}
+
+			The functions can be described as follows:
+
+			getPeer()—selects a neighbor from a list of peers.
+			prepareMessage()—return a message to propagate to a specific neighbor; randomly choose message type (rumor or want) and which message.
+			update()— update state of who has been send what.
+			send()—make HTTP POST to send message
+		*/
+
+
 		$post = $this->input->post();
 		echo "<pre>";
 		var_dump($post);
 		echo "</pre>";
+	}
+
+	public function propagate()
+	{
+
 	}
 }
 
