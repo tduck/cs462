@@ -39,13 +39,15 @@ class Lab5 extends CI_Controller {
 
 		}
 
-		$this->index();
+		// $this->index();
 	}
 
 	public function receive_message()
 	{
-		/*
-		Propagating Rumors
+		if ($post = $this->input->post())
+		{
+			/*
+			Propagating Rumors
 			Each node will run the following message propagation algorithm:
 
 			while true {
@@ -76,13 +78,12 @@ class Lab5 extends CI_Controller {
 			prepareMessage()—return a message to propagate to a specific neighbor; randomly choose message type (rumor or want) and which message.
 			update()— update state of who has been send what.
 			send()—make HTTP POST to send message
-		*/
+			*/
 
+			echo json_encode($post);
 
-		$post = $this->input->post();
-		echo "<pre>";
-		var_dump($post);
-		echo "</pre>";
+			// return json_encode($post);
+		}
 	}
 
 	public function propagate()
