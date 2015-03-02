@@ -6,7 +6,7 @@
 <?php if (isset($message)) echo $message; ?>
 </div>
 
-<form action="create" method="POST">
+<form action="<?php echo site_url('users/create'); ?>" method="POST">
 	<table>
 		<tr>
 			<td><label>*Username: </label></td>

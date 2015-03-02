@@ -30,13 +30,13 @@
         <div class="nav-collapse collapse">
           <ul class="nav">
             <li><a href="<?php echo site_url(); ?>">Home</a></li>
-            <li><a href="<?php echo site_url(); ?>/users/create">Register</a></li>
+            <li><a href="<?php echo site_url('lab3'); ?>">Lab 3</a></li>
+            <li><a href="<?php echo site_url('users/create'); ?>">Register</a></li>
             <li>
-
               <?php if (isset($_SESSION['username'])): ?>
-                <a href="<?php echo site_url(); ?>/users/logout">Logout</a>
+                <a href="<?php echo site_url('users/logout'); ?>">Logout</a>
               <?php else: ?>
-                <a href="<?php echo site_url(); ?>/users/login">Login</a>
+                <a href="<?php echo site_url('users/login'); ?>">Login</a>
               <?php endif; ?>
             </li>
           </ul>

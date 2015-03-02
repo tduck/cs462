@@ -22,6 +22,14 @@ class Lab5 extends CI_Controller {
 	{
 		$this->load->view("view_messages");
 	}
+
+	public function receive_message()
+	{
+		$post = $this->input->post();
+		echo "<pre>";
+		var_dump($post);
+		echo "</pre>";
+	}
 }
 
 /* End of file welcome.php */
