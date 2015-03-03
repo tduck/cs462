@@ -37,9 +37,37 @@
 
 	<hr>
 
+
+	<style type="text/css">
+
+		#messages td
+		{
+			padding: 5px 20px;
+		}
+
+	</style>
+
 	<div id="messages" style="padding-bottom:20px">
 		<h5>Messages Received</h5>
-		<?php ?>
+		<table>
+
+			<tr>
+				<th style="width:100px">Originator</th>
+				<th>Message ID</th>
+				<th>Text</th>
+			</tr>
+
+			<?php if (isset($messages) && $messages !== NULL): ?>
+				<?php foreach ($messages as $msg): $msg = json_decode($msg); /*var_dump($msg);*/ ?>
+					<tr>
+						<td><?php echo $msg->Originator; ?></td>
+						<td><?php echo $msg->MessageID; ?></td>
+						<td><?php echo $msg->Text; ?></td>
+					</tr>
+				<?php endforeach; ?>
+			<?php endif; ?>
+
+		</table>
 	</div>
 
 	<script>
@@ -56,24 +84,21 @@
 
 				rumorData.Originator = "tduck";
 				rumorData.Text = $('#message').val();
-				rumorData.MessageID = "";
+				rumorData.MessageID = "<?php echo $uuid; ?>:<?php echo $next_msg; ?>";
 
 				msgData.Rumor = rumorData;
-				msgData.EndPoint = "<?php echo site_url('lab5/receive_message'); ?>";
+				msgData.EndPoint = '<?php echo site_url("lab5/receive_message"); ?>';
 
-				var dataString = JSON.stringify(msgData);
-				console.log(dataString);
-
-				$.ajax({
-					contentType: "application/json",
-					type: "POST",
-					url: "<?php echo site_url('lab5/receive_message'); ?>",
-					data: msgData,
-					success: function(result) {
-						console.log(result);
+				$.ajax('<?php echo site_url("lab5/receive_message"); ?>',
+					{
+				    type: 'POST',
+				    data: JSON.stringify(msgData, null, 2),
+				    contentType: 'application/json',
+				    success: function(msg) {
+						location.reload();
 					},
-					error: function() {
-						console.log("Error sending message");
+					error: function(msg) {
+						console.log("Error: " + msg);
 					}
 				});
 
