@@ -26,7 +26,7 @@ class Lab5 extends CI_Controller {
 
 		if (isset($peers[$uuid]))
 		{
-			$next_msg = $peers[$uuid]["State"] + 1;
+			$next_msg = $peers[$uuid]["WeHave"] + 1;
 		}
 
 		$this->load->view("header");
@@ -107,20 +107,37 @@ class Lab5 extends CI_Controller {
 	}
 
 
+	public function propagate()
+	{
+		/*
+		Propagating Rumors
+		Each node will run the following message propagation algorithm:
+
+		while true {
+		  q = getPeer(state)                    
+		  s = prepareMsg(state, q)       
+		  <url> = lookup(q)
+		  send (<url>, s)                 
+		  sleep n
+		}*/
+		$q = $this->get_random_peer();
+		$msg_type = rand(0, 1);
+	}
+
+
 	public function receive_message()
 	{
 		if ($post = json_decode(trim(file_get_contents('php://input')), true))
 		{
+			$json = $this->get_messages();
+			$peers = $this->get_peers();
+
 			if (isset($post['Rumor']))
 			{
 				// 
 				//  Save a Rumor message
 				//
-				$json = $this->get_messages();
-
-				if ($json === NULL)
-					$json = array();
-
+				
 				// Add message to collection
 				$json[] = json_encode($post['Rumor']);
 				
@@ -138,57 +155,55 @@ class Lab5 extends CI_Controller {
 				fwrite($fh, json_encode($json));
 				fclose($fh);
 
-
 				// 
 				// Peers
 				//
-				$json = $this->get_peers();
-
 				$get_uuid = explode(":", $post['Rumor']['MessageID']);
 				$uuid = $get_uuid[0];
 
 				// If this peer is already in our system, increment its state
-				if (isset($json[$uuid]))
+				if (isset($peers[$uuid]))
 				{
-					$json[$uuid]['State'] = $get_uuid[1];
+					$peers[$uuid]['WeHave'] = $get_uuid[1];
 				}
 
-				// Otherwise it is a new peer with state 0
+				// Otherwise it is a new peer and we only have the latest 
 				else
 				{
-					$json[$uuid] = array('State' => 0, 'EndPoint' => $post['EndPoint']);
+					$peers[$uuid] = array('WeHave' => $get_uuid[1], 'EndPoint' => $post['EndPoint']);
 				}
 
 				// Save peer data
 				$fh = fopen("peers.json", 'w') or die("Error opening output file");
-				fwrite($fh, json_encode($json));
+				fwrite($fh, json_encode($peers));
 				fclose($fh);
 			}
 
 			else if (isset($post['Want']))
 			{
 				var_dump("Want");
+				/*
+					{"Want": {"ABCD-1234-ABCD-1234-ABCD-125A": 3,
+				              "ABCD-1234-ABCD-1234-ABCD-129B": 5,
+				              "ABCD-1234-ABCD-1234-ABCD-123C": 10
+				             } ,
+				     "EndPoint": "https://example.com/gossip/asff3"
+				    }
+				*/
+
+				foreach ($post['Want'] as $want_request => $last_msg)
+				{
+
+				}
 			}
 		}
 
 
 		/*
-		Propagating Rumors
-		Each node will run the following message propagation algorithm:
-
-		while true {
-		  q = getPeer(state)                    
-		  s = prepareMsg(state, q)       
-		  <url> = lookup(q)
-		  send (<url>, s)                 
-		  sleep n
-		}
+		
 		Each node will also provide an HTTP endpoint that responds to POST of valid messages in the following way:
 
-		t = getMessage();
-		if (  isRumor(t)  ) {
-		     store(t)
-		} elsif ( isWant(t) ) {
+		elsif ( isWant(t) ) {
 		    work_queue = addWorkToQueue(t)
 		    foreach w work_queue {
 		      s = prepareMsg(state, w)
@@ -204,23 +219,62 @@ class Lab5 extends CI_Controller {
 		prepareMessage()—return a message to propagate to a specific neighbor; randomly choose message type (rumor or want) and which message.
 		update()— update state of who has been send what.
 		send()—make HTTP POST to send message
+
 		*/
-		// return json_encode($post);
 	}
 
 
-	public function lookup_url($uuid)
+	public function test_want()
 	{
-		// $peers = $this->get_peers();
-		// if (!isset($peers[$uuid]))
-		// 	return null;
+		$msgs = $this->get_messages();
+		$peers = $this->get_peers();
 
-		// else return $peers[$uuid]['EndPoint'];
+		$example = array(
+			'Want' => array(
+				"ABCD-1234-ABCD-1234-ABCD-125A" => 0,
+				"ABCD-1234-ABCD-1234-ABCD-129B" => 5,
+				"ABCD-1234-ABCD-1234-ABCD-123C" => 10),
+			'EndPoint' => 'www.lds.org');
+
+		foreach ($example['Want'] as $want_request => $last_msg)
+		{
+			$formatted = str_replace("-", "", strtolower($want_request));
+
+			// Only do something if we have data for that peer
+			if (isset($peers[$formatted]) && $peers[$formatted]['WeHave'] > $last_msg)
+			{
+				$endpoint = $peers[$formatted]['EndPoint'];
+				// var_dump($we_have . " - " . $last_msg);
+
+				// Check all messages...
+				foreach ($msgs as $message)
+				{
+					$msg_id = explode(":", json_decode($message)->MessageID);
+
+					// If the message UUID is the one we want, and the sequence count is greater 
+					// than what the requester already has.
+					if ($msg_id[0] == $formatted && $msg_id[1] > $last_msg)
+					{
+						// Send the messages to the provided endpoint
+						var_dump($msg_id);
+					}
+				}				
+			}
+		}
 	}
 
-	public function propagate()
-	{
 
+	public function get_random_peer()
+	{
+		$peers = $this->get_peers();
+
+		if ($peers === NULL)
+			return NULL;
+
+		$keys = array_keys($this->get_peers());
+		$index = rand(0, count($keys) - 1);
+
+		return array('uuid' => $keys[$index], 'EndPoint' => $peers[$keys[$index]]['EndPoint']);
 	}
 }
 
