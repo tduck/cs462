@@ -37,12 +37,32 @@ class Lab5 extends CI_Controller {
 				"next_msg" => $next_msg));
 	}
 
+
 	public function add_peer()
 	{
 		if ($post = $this->input->post())
 		{
-
+			var_dump($post);
 		}
+
+		// 
+		// Peers
+		//
+		$json = $this->get_peers();
+
+		$get_uuid = explode(":", $post['Rumor']['MessageID']);
+		$uuid = $get_uuid[0];
+
+		// If this peer is already in our system, increment its state
+		if (!isset($json[$uuid]))
+		{
+			// $json[$uuid] = array('State' => 0, 'EndPoint' => $post['EndPoint']);
+		}
+
+		// Save peer data
+		$fh = fopen("peers.json", 'w') or die("Error opening output file");
+		fwrite($fh, json_encode($json));
+		fclose($fh);
 
 		// $this->index();
 	}

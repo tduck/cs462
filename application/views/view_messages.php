@@ -19,7 +19,7 @@
 
 	<div>
 		<h5>Add a Peer</h5>
-		<form action="<?php ?>" method="POST">
+		<form action="<?php echo site_url('lab5/add_peer'); ?>" method="POST">
 			<table>
 				<tr>
 					<td>Name:</td>
