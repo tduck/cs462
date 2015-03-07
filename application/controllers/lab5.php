@@ -121,7 +121,6 @@ class Lab5 extends CI_Controller {
 		  sleep n
 		}*/
 		$q = $this->get_random_peer();
-		$msg_type = rand(0, 1);
 	}
 
 
@@ -275,6 +274,52 @@ class Lab5 extends CI_Controller {
 		$index = rand(0, count($keys) - 1);
 
 		return array('uuid' => $keys[$index], 'EndPoint' => $peers[$keys[$index]]['EndPoint']);
+	}
+
+	public function prepare_message()
+	{
+		$msg_type = rand(0, 1);
+		if ($msg_type == 0)
+		{
+			// rumor
+		}
+
+		else
+		{
+			// want
+		}
+	}
+
+	public function test_send()
+	{
+		$url = "";
+		$message = json_encode(array('test' => "I am testing this"));
+
+		var_dump($this->send($url, $message));
+	}
+
+	public function send($endpoint, $message)
+	{
+		$ch = curl_init($endpoint);
+
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+		$response = curl_exec($ch);
+		curl_close($ch);
+
+		return $response;
+	}
+
+	public function test_send_endpoint()
+	{
+		if ($post = json_decode(trim(file_get_contents('php://input')), true))
+		{
+			var_dump($post);
+		}
+
+		else echo "Didn't decode JSON";
 	}
 }
 
