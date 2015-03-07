@@ -52,14 +52,16 @@
 		<table>
 
 			<tr>
+				<th style="width:200px">Time</th>
 				<th style="width:100px">Originator</th>
 				<th>Message ID</th>
 				<th>Text</th>
 			</tr>
 
 			<?php if (isset($messages) && $messages !== NULL): ?>
-				<?php foreach ($messages as $msg): $msg = json_decode($msg); /*var_dump($msg);*/ ?>
+				<?php foreach ($messages as $key => $msg): $msg = json_decode($msg); /*var_dump($msg);*/ ?>
 					<tr>
+						<td><?php echo date('Y-m-d H:i:s', floor($key)); ?></td>
 						<td><?php echo $msg->Originator; ?></td>
 						<td><?php echo $msg->MessageID; ?></td>
 						<td><?php echo $msg->Text; ?></td>
