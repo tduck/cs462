@@ -454,7 +454,7 @@ class Lab5 extends CI_Controller {
 			fwrite($fh, json_encode($json));
 			fclose($fh);
 
-			// $this->index();
+			$this->index();
 		}
 	}
 }
