@@ -477,7 +477,7 @@ class Lab5 extends CI_Controller {
 		    }
 		}
 
-		$this->index();
+		redirect(site_url('lab5'));
 	}
 }
 
