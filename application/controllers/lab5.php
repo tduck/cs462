@@ -243,6 +243,10 @@ class Lab5 extends CI_Controller {
 		{			
 			foreach ($peer['TheyHave'] as $uuid => $last_received)
 			{
+				echo "<pre>";
+				echo $uuid . " -> " . $last_received;
+				echo "</pre>";
+				
 				if (isset($stored_messages[$uuid]))
 				{
 					$uuid_messages = $stored_messages[$uuid];
