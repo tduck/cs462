@@ -5,9 +5,9 @@
 <title>tduck - CS 462</title>
 
     
-    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <link href="<?php echo base_url(); ?>/css/bootstrap.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>/css/bootstrap-responsive.css" rel="stylesheet">
+    <script src="<?php echo base_url(); ?>/js/jquery-latest.min.js" type="text/javascript"></script>
 
     <style>
 
