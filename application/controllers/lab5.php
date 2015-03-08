@@ -444,7 +444,8 @@ class Lab5 extends CI_Controller {
 			{
 				$json[$post['url']] = array("EndPoint" => $post['url'], 
 					"Originator" => $post['peer_name'], 
-					"WeHave" => "-1");
+					"WeHave" => "-1",
+					"TheyHave" => array());
 			}
 			else if (!isset($json[$post['url']]["Originator"]))
 			{
