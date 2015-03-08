@@ -50,15 +50,16 @@ class Lab5 extends CI_Controller {
 		  send (<url>, s)                 
 		  sleep n
 		}*/
+
 		$q = $this->get_random_peer();
 
-		echo "Random peer: \n<pre>";
+		echo "Random peer: \n<pre>\n";
 		var_dump($q);
-		echo "</pre>";
+		echo "</pre>\n";
 
 		$message = $this->prepare_message($q);
 
-		echo "Message: \n<pre>";
+		echo "Message: \n<pre>\n";
 		var_dump($message);
 		echo "</pre>";
 
@@ -66,9 +67,7 @@ class Lab5 extends CI_Controller {
 		// (This prevents infinite loops)
 		if ($message != "[]")
 		{
-			echo "Send: " . $q['EndPoint'];
-
-		// $this->send($q['EndPoint'], $message);
+			$this->send($q['EndPoint'], $message);
 		}
 	}
 
@@ -149,13 +148,38 @@ class Lab5 extends CI_Controller {
 
 				$url = $post['EndPoint'];
 
-				foreach ($post['Want'] as $want_request => $last_msg)
+				foreach ($post['Want'] as $requested_uuid => $last_msg)
 				{
-					$formatted = str_replace("-", "", strtolower($want_request));
+					$formatted_uuid = str_replace("-", "", strtolower($requested_uuid));
+					$post['Want'][$formatted_uuid] = $last_msg;
+					unset($post['Want'][$requested_uuid]);
+				}
 
-					$peers[$post['EndPoint']]['TheyHave'][$formatted] = $last_msg;
+				// Save peer data
+				$peers = $this->get_peers();
+				$peers[$post['EndPoint']]['EndPoint'] = $post['EndPoint'];
+				$peers[$post['EndPoint']]['TheyHave'] = $post['Want'];
 
+				$fh = fopen("peers.json", 'w') or die("Error opening output file");
+				fwrite($fh, json_encode($peers));
+				fclose($fh);
+
+				foreach ($post['Want'] as $requested_uuid => $last_msg)
+				{
+					$peer = $this->lookup_peer($requested_uuid);
 					// $message = $this->prepare_message(
+
+					// Only do something if we have data for that peer
+					if ($peer != NULL)
+					{
+						$msg = $this->prepare_message($peer);
+
+						// If the message JSON is empty, the peer has everything we have.
+						if ($msg != "[]")
+						{
+							$this->send($peer['EndPoint'], $msg);
+						}
+					}	
 				}
 			}
 
@@ -168,9 +192,7 @@ class Lab5 extends CI_Controller {
 
 		/*
 		
-			Each node will also provide an HTTP endpoint that responds to POST of valid messages in the following way:
-
-			elsif ( isWant(t) ) {
+			if ( isWant(t) ) {
 			    work_queue = addWorkToQueue(t)
 			    foreach w work_queue {
 			      s = prepareMsg(state, w)
@@ -182,7 +204,6 @@ class Lab5 extends CI_Controller {
 
 			The functions can be described as follows:
 
-			getPeer()—selects a neighbor from a list of peers.
 			prepareMessage()—return a message to propagate to a specific neighbor; randomly choose message type (rumor or want) and which message.
 			update()— update state of who has been send what.
 			send()—make HTTP POST to send message
@@ -231,23 +252,11 @@ class Lab5 extends CI_Controller {
 			{
 				$msg = $this->prepare_message($peer);
 
-				var_dump($msg);
-			}
-
-			
-			// 	// Check all messages...
-			// 	foreach ($msgs as $message)
-			// 	{
-			// 		$msg_id = explode(":", json_decode($message)->MessageID);
-
-			// 		// If the message UUID is the one we want, and the sequence count is greater 
-			// 		// than what the requester already has.
-			// 		if ($msg_id[0] == $formatted && $msg_id[1] > $last_msg)
-			// 		{
-			// 			// Send the messages to the provided endpoint
-			// 			var_dump($msg_id);
-			// 		}
-			// 	}				
+				if ($msg != "[]")
+				{
+					$this->send($peer['EndPoint'], $msg);
+				}
+			}			
 		}
 
 		$fh = fopen("peers.json", 'w') or die("Error opening output file");
@@ -325,14 +334,6 @@ class Lab5 extends CI_Controller {
 		return json_encode($msg_array);
 	}
 
-	public function test_send()
-	{
-		$url = "http://54.67.54.63/index.php/lab5/test_send_endpoint";
-		$message = json_encode(array('test' => "I am testing this"));
-
-		var_dump($this->send($url, $message));
-	}
-
 
 	public function send($endpoint, $message)
 	{
@@ -346,17 +347,6 @@ class Lab5 extends CI_Controller {
 		curl_close($ch);
 
 		return $response;
-	}
-
-
-	public function test_send_endpoint()
-	{
-		if ($post = json_decode(trim(file_get_contents('php://input')), true))
-		{
-			var_dump($post);
-		}
-
-		else echo "Didn't decode JSON";
 	}
 
 

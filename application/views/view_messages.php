@@ -15,6 +15,9 @@
 		</form>
 	</div>
 
+	<p>Propagation: <span id="propagateStatus">OFF</span>
+	<input id="propagateToggle" type="submit" value="Toggle"></p>
+
 	<hr>
 
 	<div>
@@ -74,11 +77,52 @@
 
 	<script>
 
+		var propagateCheck = false;
+
 		$(function() {
+
+			// Number of seconds between propagate calls
+			var n = 5;
+
+			setInterval(function() {
+			
+				if (propagateCheck == true)
+				{
+					$.ajax('<?php echo site_url("lab5/propagate"); ?>',
+						{
+							type: 'POST',
+							success: function(data)
+							{
+								console.log(data);
+							},
+							error: function(msg)
+							{
+								console.log(msg);
+							}
+						}
+					);
+				}
+
+			}, n * 1000);
+
+
+			$('#propagateToggle').click(function(e) {
+				e.preventDefault();
+				propagateCheck = !propagateCheck;
+
+				if (propagateCheck == true)
+				{
+					$('#propagateStatus').html("ON");
+				}
+
+				else
+				{
+					$('#propagateStatus').html("OFF");
+				}
+			});
 
 
 			$('#send_message_form').submit(function(e) {
-
 				e.preventDefault();
 
 				var msgData = new Object();
@@ -103,7 +147,6 @@
 						console.log(msg);
 					}
 				});
-
 			});
 
 		});
