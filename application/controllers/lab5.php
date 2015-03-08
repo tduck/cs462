@@ -245,6 +245,11 @@ class Lab5 extends CI_Controller {
 		// If they have everything we have, this will return an empty array.
 		if ($msg_type == 0)
 		{			
+			if (!isset($peer['TheyHave'][$this->get_uuid()]))
+			{
+				$peer['TheyHave'][$this->get_uuid()] = "-1";
+			}
+
 			foreach ($peer['TheyHave'] as $uuid => $last_received)
 			{
 				echo "<pre>";
