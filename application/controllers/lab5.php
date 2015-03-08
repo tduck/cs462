@@ -192,9 +192,9 @@ class Lab5 extends CI_Controller {
 			// Only do something if we have data for that peer
 			if ($peer != NULL)
 			{
-				$msg = $this->prepare_message($peer);
+				$msg = $this->prepare_message($peer, 0);
 
-				if ($msg != "[]")
+				while ($msg != "[]")
 				{
 					$this->send($peer['EndPoint'], $msg);
 
@@ -209,6 +209,8 @@ class Lab5 extends CI_Controller {
 
 						$peers[$msg_array->EndPoint] = $peer;
 					}
+
+					$msg = $this->prepare_message($peer, 0);
 				}
 			}			
 		}
@@ -219,13 +221,15 @@ class Lab5 extends CI_Controller {
 	}
 
 
-	public function prepare_message($peer)
+	public function prepare_message($peer, $msg_type == -1)
 	{
 		$msg_array = array();
 
 		$stored_messages = $this->get_messages();
 
-		$msg_type = rand(0, 1);
+		if ($msg_type == -1)
+			$msg_type = rand(0, 1);
+
 
 		// If we don't have the peer's UUID in our system, we will only
 		// send want messages until we get their UUID.
