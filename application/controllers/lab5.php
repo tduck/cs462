@@ -137,15 +137,6 @@ class Lab5 extends CI_Controller {
 
 			else if (isset($post['Want']))
 			{
-				/*
-					{"Want": {"ABCD-1234-ABCD-1234-ABCD-125A": 3,
-				              "ABCD-1234-ABCD-1234-ABCD-129B": 5,
-				              "ABCD-1234-ABCD-1234-ABCD-123C": 10
-				             } ,
-				     "EndPoint": "https://example.com/gossip/asff3"
-				    }
-				*/
-
 				$url = $post['EndPoint'];
 
 				foreach ($post['Want'] as $requested_uuid => $last_msg)
@@ -167,7 +158,6 @@ class Lab5 extends CI_Controller {
 				foreach ($post['Want'] as $requested_uuid => $last_msg)
 				{
 					$peer = $this->lookup_peer($requested_uuid);
-					// $message = $this->prepare_message(
 
 					// Only do something if we have data for that peer
 					if ($peer != NULL)
@@ -188,27 +178,6 @@ class Lab5 extends CI_Controller {
 			fwrite($fh, json_encode($peers));
 			fclose($fh);
 		}
-
-
-		/*
-		
-			if ( isWant(t) ) {
-			    work_queue = addWorkToQueue(t)
-			    foreach w work_queue {
-			      s = prepareMsg(state, w)
-			      <url> = getUrl(w)
-			      send(<url>, s)
-			      state = update(state, s)
-			    }
-			}
-
-			The functions can be described as follows:
-
-			prepareMessage()—return a message to propagate to a specific neighbor; randomly choose message type (rumor or want) and which message.
-			update()— update state of who has been send what.
-			send()—make HTTP POST to send message
-
-		*/
 	}
 
 
@@ -445,7 +414,7 @@ class Lab5 extends CI_Controller {
 				$json[$post['url']] = array("EndPoint" => $post['url'], 
 					"Originator" => $post['peer_name'], 
 					"WeHave" => "-1",
-					"TheyHave" => array());
+					"TheyHave" => array($this->get_uuid() => "-1"));
 			}
 			else if (!isset($json[$post['url']]["Originator"]))
 			{
