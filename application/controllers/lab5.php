@@ -92,7 +92,11 @@ class Lab5 extends CI_Controller {
 
 				if (isset($json[$sender_uuid]))
 				{
-					$json[$sender_uuid][$message_index] = json_encode($post['Rumor']);
+					// extra check against infinite loops
+					if (!isset($json[$sender_uuid][$message_index]))
+					{
+						$json[$sender_uuid][$message_index] = json_encode($post['Rumor']);
+					}
 				}
 
 				else
