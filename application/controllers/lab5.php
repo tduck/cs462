@@ -70,6 +70,7 @@ class Lab5 extends CI_Controller {
 
 	public function receive_message()
 	{
+		header('Access-Control-Allow-Headers: *');
 		header('Access-Control-Allow-Origin: *');
 		if ($post = json_decode(trim(file_get_contents('php://input')), true))
 		{
