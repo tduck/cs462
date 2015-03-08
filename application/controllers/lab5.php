@@ -221,7 +221,7 @@ class Lab5 extends CI_Controller {
 	}
 
 
-	public function prepare_message($peer, $msg_type == -1)
+	public function prepare_message($peer, $msg_type = -1)
 	{
 		$msg_array = array();
 
