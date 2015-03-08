@@ -85,7 +85,7 @@
 		$(function() {
 
 			// Number of seconds between propagate calls
-			var n = 5;
+			var n = 2;
 
 			setInterval(function() {
 			
