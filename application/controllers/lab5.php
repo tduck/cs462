@@ -24,9 +24,9 @@ class Lab5 extends CI_Controller {
 		$peers = $this->get_peers();
 		$next_msg = 0;
 
-		if (isset($peers[$uuid]))
+		if (isset($peers[site_url('lab5/receive_message')]))
 		{
-			$next_msg = $peers[$uuid]["WeHave"] + 1;
+			$next_msg = $peers[site_url('lab5/receive_message')]["WeHave"] + 1;
 		}
 
 		$this->load->view("header");
@@ -82,7 +82,7 @@ class Lab5 extends CI_Controller {
 			if (isset($post['Rumor']))
 			{
 				$message_id = explode(":", $post['Rumor']['MessageID']);
-				$sender_uuid = $message_id[0];
+				$sender_uuid = str_replace("-", "", strtolower($message_id[0]));
 				$message_index = $message_id[1];
 
 				if (isset($json[$sender_uuid]))
@@ -107,19 +107,22 @@ class Lab5 extends CI_Controller {
 				fclose($fh);
 
 				// Check the peer who sent the message
-				$get_uuid = explode(":", $post['Rumor']['MessageID']);
-				$uuid = $get_uuid[0];
-
-				// If this peer is already in our system, increment its state
-				if (isset($peers[$uuid]))
+				// If this peer is already in our system, update its state
+				// We know we have this message, and so do they
+				if (isset($peers[$post['EndPoint']]))
 				{
-					$peers[$uuid]['WeHave'] = $get_uuid[1];
+					$peers[$post['EndPoint']]['WeHave'] = $message_index;
+					$peers[$post['EndPoint']]['TheyHave'][$sender_uuid] = $message_index;
+					$peers[$post['EndPoint']]['UUID'] = $sender_uuid;
 				}
 
-				// Otherwise it is a new peer and we only have the single message they sent
+				// Otherwise it is a new peer and we only have the message we just got from them.
 				else
 				{
-					$peers[$uuid] = array('WeHave' => $get_uuid[1], 'EndPoint' => $post['EndPoint']);
+					$peers[$post['EndPoint']] = array('UUID' => $sender_uuid,
+						'WeHave' => $message_index, 
+						'TheyHave' => array($sender_uuid => $message_index),
+						'Originator' => $post['Rumor']['Originator']);
 				}
 
 				// Save peer data
@@ -368,9 +371,7 @@ class Lab5 extends CI_Controller {
 		$keys = array_keys($this->get_peers());
 		$index = rand(0, count($keys) - 1);
 
-		return array('uuid' => $keys[$index], 
-			'EndPoint' => $peers[$keys[$index]]['EndPoint'], 
-			'WeHave' => $peers[$keys[$index]]['WeHave']);
+		return $peers[$keys[$index]];
 	}
 
 
@@ -385,26 +386,24 @@ class Lab5 extends CI_Controller {
 	{
 		if ($post = $this->input->post())
 		{
-			var_dump($post);
+			// 
+			// Peers
+			//
+			$json = $this->get_peers();
+
+			// If this peer isn't already in our system, add it
+			if (!isset($json[$post['url']]))
+			{
+				$json[$post['url']] = array("Originator" => $post['peer_name'], "WeHave" => "-1");
+			}
+
+			// Save peer data
+			$fh = fopen("peers.json", 'w') or die("Error opening output file");
+			fwrite($fh, json_encode($json));
+			fclose($fh);
+
+			// $this->index();
 		}
-
-		// 
-		// Peers
-		//
-		$json = $this->get_peers();
-
-		// If this peer is already in our system, increment its state
-		// if (!isset($json[$uuid]))
-		// {
-		// 	// $json[$uuid] = array('State' => 0, 'EndPoint' => $post['EndPoint']);
-		// }
-
-		// Save peer data
-		$fh = fopen("peers.json", 'w') or die("Error opening output file");
-		fwrite($fh, json_encode($json));
-		fclose($fh);
-
-		// $this->index();
 	}
 }
 
