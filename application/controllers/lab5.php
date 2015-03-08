@@ -289,8 +289,8 @@ class Lab5 extends CI_Controller {
 
 		$msg_type = rand(0, 1);
 
-		// If we don't have the peer in our system, we will only
-		// send want messages until we get data about them.
+		// If we don't have the peer's UUID in our system, we will only
+		// send want messages until we get their UUID.
 		if ($peer == NULL)
 			$msg_type == 1;
 
@@ -458,6 +458,26 @@ class Lab5 extends CI_Controller {
 
 			$this->index();
 		}
+	}
+
+
+	public function reset()
+	{
+		$fileArray = array(
+		    "peers.json",
+		    "messages.json",
+		    "ordered_messages.json"
+		);
+
+		foreach ($fileArray as $value) {
+		    if (file_exists($value)) {
+		        unlink($value);
+		    } else {
+		        // code when file not found
+		    }
+		}
+
+		$this->index();
 	}
 }
 

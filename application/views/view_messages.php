@@ -4,6 +4,9 @@
 
 	<div>
 		<h3>tduck - Lab 5</h3>
+		<form style="float:right" action="<?php echo site_url('lab5/reset'); ?>" method="POST">
+			<input type="submit" value="Reset">
+		</form>
 	</div>
 
 	<div>
