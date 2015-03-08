@@ -66,7 +66,7 @@ class Lab5 extends CI_Controller {
 			echo "Message: \n<pre>\n";
 			var_dump($message);
 			echo "</pre>";
-			
+
 			$this->send($q['EndPoint'], $message);
 		}
 
@@ -373,7 +373,7 @@ class Lab5 extends CI_Controller {
 		if (empty($peers))
 			return NULL;
 
-		$keys = array_keys($this->get_peers());
+		$keys = array_keys($peers());
 		$index = rand(0, count($keys) - 1);
 
 		return $peers[$keys[$index]];
