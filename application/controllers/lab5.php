@@ -130,6 +130,10 @@ class Lab5 extends CI_Controller {
 				{
 					$peers[$post['EndPoint']] = array('WeHave' => $message_index, 
 						'TheyHave' => array($sender_uuid => $message_index));
+					if ($sender_uuid != $this->get_uuid())
+					{
+						$peers[$post['EndPoint']]['TheyHave'][$this->get_uuid()] = "-1";
+					}
 				}
 
 				$peers[$post['EndPoint']]['EndPoint'] = $post['EndPoint'];
