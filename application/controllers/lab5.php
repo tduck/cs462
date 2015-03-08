@@ -113,17 +113,17 @@ class Lab5 extends CI_Controller {
 				{
 					$peers[$post['EndPoint']]['WeHave'] = $message_index;
 					$peers[$post['EndPoint']]['TheyHave'][$sender_uuid] = $message_index;
-					$peers[$post['EndPoint']]['UUID'] = $sender_uuid;
 				}
 
 				// Otherwise it is a new peer and we only have the message we just got from them.
 				else
 				{
-					$peers[$post['EndPoint']] = array('UUID' => $sender_uuid,
-						'WeHave' => $message_index, 
-						'TheyHave' => array($sender_uuid => $message_index),
-						'Originator' => $post['Rumor']['Originator']);
+					$peers[$post['EndPoint']] = array('WeHave' => $message_index, 
+						'TheyHave' => array($sender_uuid => $message_index));
 				}
+
+				$peers[$post['EndPoint']]['UUID'] = $sender_uuid;
+				$peers[$post['EndPoint']]['Originator'] = $post['Rumor']['Originator'];
 
 				// Save peer data
 				$fh = fopen("peers.json", 'w') or die("Error opening output file");
