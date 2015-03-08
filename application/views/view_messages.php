@@ -94,38 +94,51 @@
 					$.ajax('<?php echo site_url("lab5/propagate"); ?>',
 						{
 							type: 'POST',
-							dataType: 'json',
-							success: function(data)
+							success: function(d)
 							{
-								console.log(data);
-								
-								$('#message_table').html();
+								console.log(d);
 
-								var table = "<tr><th style=\"width:200px\">Time</th>"
-									+ "<th style=\"width:100px\">Originator</th>"
-									+ "<th>Message ID</th>" 
-									+ "<th>Text</th>" 
-									+ "</tr>";
+								$.ajax('<?php echo site_url("lab5/ordered_messages_json"); ?>', 
+								{
+									type: 'POST', 
+									dataType: 'json',
+									success: function (data)
+									{
+										console.log(data);
 
-								$.each(data, function(i, item) {
+										$('#message_table').html();
 
-									var x = JSON.parse(item);
-									
-									var date = new Date(parseInt(Math.floor(i) * 1000));
+										var table = "<tr><th style=\"width:200px\">Time</th>"
+											+ "<th style=\"width:100px\">Originator</th>"
+											+ "<th>Message ID</th>" 
+											+ "<th>Text</th>" 
+											+ "</tr>";
 
-									table += "<tr><td>" + date.getFullYear() + "-" + ('0' + (date.getMonth() + 1)).slice(-2) 
-										+ "-" + ('0' + (date.getDate())).slice(-2) + " " + ('0' + (date.getHours())).slice(-2)
-										+ ":" + ('0' + (date.getMinutes())).slice(-2) + ":" + ('0' + (date.getSeconds())).slice(-2) + "</td>";
+										$.each(data, function(i, item) {
 
-									table += "<td>" + x.Originator + "</td>";
-									table += "<td>" + x.MessageID + "</td>";									
-									table += "<td>" + x.Text + "</td>";
+											var x = JSON.parse(item);
+											
+											var date = new Date(parseInt(Math.floor(i) * 1000));
 
-									table += "</tr>";
+											table += "<tr><td>" + date.getFullYear() + "-" + ('0' + (date.getMonth() + 1)).slice(-2) 
+												+ "-" + ('0' + (date.getDate())).slice(-2) + " " + ('0' + (date.getHours())).slice(-2)
+												+ ":" + ('0' + (date.getMinutes())).slice(-2) + ":" + ('0' + (date.getSeconds())).slice(-2) + "</td>";
 
+											table += "<td>" + x.Originator + "</td>";
+											table += "<td>" + x.MessageID + "</td>";									
+											table += "<td>" + x.Text + "</td>";
+
+											table += "</tr>";
+
+										});
+
+										$('#message_table').html(table);
+									},
+									error: function(e)
+									{
+										console.log(e);
+									}
 								});
-
-								$('#message_table').html(table);
 							},
 							error: function(msg)
 							{
