@@ -304,9 +304,9 @@ class Lab5 extends CI_Controller {
 				if (isset($stored_messages[$uuid]))
 				{
 					$uuid_messages = $stored_messages[$uuid];
-					if (isset($uuid_messages[$last_received + 1]))
+					if (isset($uuid_messages[intval($last_received) + 1]))
 					{
-						$to_send = json_decode($uuid_messages[$last_received + 1]);
+						$to_send = json_decode($uuid_messages[intval($last_received) + 1]);
 
 						$msg_array = array("EndPoint" => site_url('lab5/receive_message'));
 						$msg_array['Rumor'] = array("Originator" => $to_send->Originator,
