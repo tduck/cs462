@@ -97,10 +97,10 @@
 				    data: JSON.stringify(msgData, null, 2),
 				    contentType: 'application/json',
 				    success: function(msg) {
-						location.reload();
+				    	location.reload();
 					},
 					error: function(msg) {
-						console.log("Error: " + msg);
+						console.log(msg);
 					}
 				});
 
