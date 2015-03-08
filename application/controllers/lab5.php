@@ -59,14 +59,14 @@ class Lab5 extends CI_Controller {
 
 		$message = $this->prepare_message($q);
 
-		echo "Message: \n<pre>\n";
-		var_dump($message);
-		echo "</pre>";
-
 		// An empty JSON message means that the peer has everything we have
 		// (This prevents infinite loops)
 		if ($q != NULL && $message != "[]")
 		{
+			echo "Message: \n<pre>\n";
+			var_dump($message);
+			echo "</pre>";
+			
 			$this->send($q['EndPoint'], $message);
 		}
 
