@@ -97,6 +97,8 @@
 							dataType: 'json',
 							success: function(data)
 							{
+								console.log(data);
+								
 								$('#message_table').html();
 
 								var table = "<tr><th style=\"width:200px\">Time</th>"
