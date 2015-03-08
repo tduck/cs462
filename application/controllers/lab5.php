@@ -168,6 +168,19 @@ class Lab5 extends CI_Controller {
 						if ($msg != "[]")
 						{
 							$this->send($peer['EndPoint'], $msg);
+
+							// Update state if it's a Rumor message
+							$msg_array = json_decode($msg);
+
+							if (isset($msg_array->Rumor))
+							{
+								$peer = $peers[$msg_array->EndPoint];
+
+								$just_sent = explode(":", $msg_array->Rumor->MessageID);
+								$peer['TheyHave'][$just_sent[0]] = $just_sent[1];
+
+								$peers[$msg_array->EndPoint] = $peer;
+							}
 						}
 					}	
 				}
@@ -224,6 +237,18 @@ class Lab5 extends CI_Controller {
 				if ($msg != "[]")
 				{
 					$this->send($peer['EndPoint'], $msg);
+
+					$msg_array = json_decode($msg);
+
+					if (isset($msg_array->Rumor))
+					{
+						$peer = $peers[$msg_array->EndPoint];
+
+						$just_sent = explode(":", $msg_array->Rumor->MessageID);
+						$peer['TheyHave'][$just_sent[0]] = $just_sent[1];
+
+						$peers[$msg_array->EndPoint] = $peer;
+					}
 				}
 			}			
 		}
