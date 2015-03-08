@@ -442,7 +442,9 @@ class Lab5 extends CI_Controller {
 			// If this peer isn't already in our system, add it
 			if (!isset($json[$post['url']]))
 			{
-				$json[$post['url']] = array("Originator" => $post['peer_name'], "WeHave" => "-1");
+				$json[$post['url']] = array("EndPoint" => $post['url'], 
+					"Originator" => $post['peer_name'], 
+					"WeHave" => "-1");
 			}
 			else if (!isset($json[$post['url']]["Originator"]))
 			{
