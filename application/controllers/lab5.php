@@ -135,89 +135,49 @@ class Lab5 extends CI_Controller {
 				$peers[$post['EndPoint']]['EndPoint'] = $post['EndPoint'];
 				$peers[$post['EndPoint']]['UUID'] = $sender_uuid;
 				$peers[$post['EndPoint']]['Originator'] = $post['Rumor']['Originator'];
+
+				// Save peer data
+				$fh = fopen("peers.json", 'w') or die("Error opening output file");
+				fwrite($fh, json_encode($peers));
+				fclose($fh);
 			}
 
 			else if (isset($post['Want']))
 			{
-				$url = $post['EndPoint'];
-
-				foreach ($post['Want'] as $requested_uuid => $last_msg)
-				{
-					$formatted_uuid = str_replace("-", "", strtolower($requested_uuid));
-					$post['Want'][$formatted_uuid] = $last_msg;
-					unset($post['Want'][$requested_uuid]);
-				}
-
-				// Save peer data
-				$peers = $this->get_peers();
-				$peers[$post['EndPoint']]['EndPoint'] = $post['EndPoint'];
-				$peers[$post['EndPoint']]['TheyHave'] = $post['Want'];
-
-				$fh = fopen("peers.json", 'w') or die("Error opening output file");
-				fwrite($fh, json_encode($peers));
-				fclose($fh);
-
-				foreach ($post['Want'] as $requested_uuid => $last_msg)
-				{
-					$peer = $this->lookup_peer($requested_uuid);
-
-					// Only do something if we have data for that peer
-					if ($peer != NULL)
-					{
-						$msg = $this->prepare_message($peer);
-
-						// If the message JSON is empty, the peer has everything we have.
-						if ($msg != "[]")
-						{
-							$this->send($peer['EndPoint'], $msg);
-
-							// Update state if it's a Rumor message
-							$msg_array = json_decode($msg);
-
-							if (isset($msg_array->Rumor))
-							{
-								$peer = $peers[$msg_array->EndPoint];
-
-								$just_sent = explode(":", $msg_array->Rumor->MessageID);
-								$peer['TheyHave'][$just_sent[0]] = $just_sent[1];
-
-								$peers[$msg_array->EndPoint] = $peer;
-							}
-						}
-					}	
-				}
-			}
-
-			// Save peer data
-			$fh = fopen("peers.json", 'w') or die("Error opening output file");
-			fwrite($fh, json_encode($peers));
-			fclose($fh);
+				$this->process_want($post);
+			}		
 		}
 	}
 
 
 	public function test_want()
 	{
-		$msgs = $this->get_messages();
+		$msg = array(
+            'Want' => array(
+                "ABCD-1234-ABCD-1234-ABCD-125A" => 0,
+                "ABCD-1234-ABCD-1234-ABCD-129B" => 5,
+                "ABCD-1234-ABCD-1234-ABCD-123C" => 10),
+            'EndPoint' => 'http://localhost:8080/cs462/index.php/lab5/receive_message');
 
-		$example = array(
-			'Want' => array(
-				"ABCD-1234-ABCD-1234-ABCD-125A" => 0,
-				"ABCD-1234-ABCD-1234-ABCD-129B" => 5,
-				"ABCD-1234-ABCD-1234-ABCD-123C" => 10),
-			'EndPoint' => 'www.lds.org');
+		$this->process_want($msg);
+	}
+
+
+	public function process_want($post)
+	{
+		$example = $post;
 
 		foreach ($example['Want'] as $requested_uuid => $last_msg)
 		{
 			$formatted_uuid = str_replace("-", "", strtolower($requested_uuid));
-			$example['Want'][$formatted_uuid] = $last_msg;
+			$example['Want'][$formatted_uuid] = "" . $last_msg;
 			unset($example['Want'][$requested_uuid]);
 		}
 
 		// Save peer data
 		$peers = $this->get_peers();
 		$peers[$example['EndPoint']]['EndPoint'] = $example['EndPoint'];
-		$peers[$example['EndPoint']]['TheyHave'] = $example['Want'];
+		// $peers[$example['EndPoint']]['TheyHave'] = $example['Want'];
 
 		$fh = fopen("peers.json", 'w') or die("Error opening output file");
 		fwrite($fh, json_encode($peers));
@@ -226,10 +186,6 @@ class Lab5 extends CI_Controller {
 		foreach ($example['Want'] as $requested_uuid => $last_msg)
 		{
 			$peer = $this->lookup_peer($requested_uuid);
-
-			echo "<pre>";
-			var_dump($peer);
-			echo "</pre>";
 
 			// Only do something if we have data for that peer
 			if ($peer != NULL)
@@ -247,7 +203,7 @@ class Lab5 extends CI_Controller {
 						$peer = $peers[$msg_array->EndPoint];
 
 						$just_sent = explode(":", $msg_array->Rumor->MessageID);
-						$peer['TheyHave'][$just_sent[0]] = $just_sent[1];
+						$peer['TheyHave'][$just_sent[0]] = "" . $just_sent[1];
 
 						$peers[$msg_array->EndPoint] = $peer;
 					}
@@ -258,22 +214,6 @@ class Lab5 extends CI_Controller {
 		$fh = fopen("peers.json", 'w') or die("Error opening output file");
 		fwrite($fh, json_encode($peers));
 		fclose($fh);
-
-		/*if ( isWant(t) ) {
-		    work_queue = addWorkToQueue(t)
-		    foreach w work_queue {
-		      s = prepareMsg(state, w) -- prepare a message for the "wanted" peer
-		      <url> = getUrl(w)	-- message will be sent to the "wanted" peer's URL
-		      send(<url>, s)
-		      state = update(state, s)
-		    }
-		}
-
-		The functions can be described as follows:
-
-		prepareMessage()—return a message to propagate to a specific neighbor; randomly choose message type (rumor or want) and which message.
-		update()— update state of who has been send what.
-		send()—make HTTP POST to send message*/
 	}
 
 
