@@ -55,7 +55,7 @@
 
 	<div id="messages" style="padding-bottom:20px">
 		<h5>Messages Received</h5>
-		<table>
+		<table id="message_table">
 
 			<tr>
 				<th style="width:200px">Time</th>
@@ -94,9 +94,36 @@
 					$.ajax('<?php echo site_url("lab5/propagate"); ?>',
 						{
 							type: 'POST',
+							dataType: 'json',
 							success: function(data)
 							{
-								console.log(data);
+								$('#message_table').html();
+
+								var table = "<tr><th style=\"width:200px\">Time</th>"
+									+ "<th style=\"width:100px\">Originator</th>"
+									+ "<th>Message ID</th>" 
+									+ "<th>Text</th>" 
+									+ "</tr>";
+
+								$.each(data, function(i, item) {
+
+									var x = JSON.parse(item);
+									
+									var date = new Date(parseInt(Math.floor(i) * 1000));
+
+									table += "<tr><td>" + date.getFullYear() + "-" + ('0' + (date.getMonth() + 1)).slice(-2) 
+										+ "-" + ('0' + (date.getDate())).slice(-2) + " " + ('0' + (date.getHours())).slice(-2)
+										+ ":" + ('0' + (date.getMinutes())).slice(-2) + ":" + ('0' + (date.getSeconds())).slice(-2) + "</td>";
+
+									table += "<td>" + x.Originator + "</td>";
+									table += "<td>" + x.MessageID + "</td>";									
+									table += "<td>" + x.Text + "</td>";
+
+									table += "</tr>";
+
+								});
+
+								$('#message_table').html(table);
 							},
 							error: function(msg)
 							{

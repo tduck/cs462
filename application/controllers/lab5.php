@@ -53,15 +53,15 @@ class Lab5 extends CI_Controller {
 
 		$q = $this->get_random_peer();
 
-		echo "Random peer: \n<pre>\n";
-		var_dump($q);
-		echo "</pre>\n";
+		// echo "Random peer: \n<pre>\n";
+		// var_dump($q);
+		// echo "</pre>\n";
 
 		$message = $this->prepare_message($q);
 
-		echo "Message: \n<pre>\n";
-		var_dump($message);
-		echo "</pre>";
+		// echo "Message: \n<pre>\n";
+		// var_dump($message);
+		// echo "</pre>";
 
 		// An empty JSON message means that the peer has everything we have
 		// (This prevents infinite loops)
@@ -69,6 +69,8 @@ class Lab5 extends CI_Controller {
 		{
 			$this->send($q['EndPoint'], $message);
 		}
+
+		echo json_encode($this->get_ordered_messages());
 	}
 
 
