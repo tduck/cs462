@@ -152,12 +152,12 @@ class Lab5 extends CI_Controller {
 
 	public function test_want()
 	{
-		$msg = array(
+		$msg = json_decode(json_encode(array(
             'Want' => array(
                 "ABCD-1234-ABCD-1234-ABCD-125A" => 0,
                 "ABCD-1234-ABCD-1234-ABCD-129B" => 5,
                 "ABCD-1234-ABCD-1234-ABCD-123C" => 10),
-            'EndPoint' => 'http://localhost:8080/cs462/index.php/lab5/receive_message');
+            'EndPoint' => 'http://localhost:8080/cs462/index.php/lab5/receive_message')));
 
 		$this->process_want($msg);
 	}
@@ -167,23 +167,25 @@ class Lab5 extends CI_Controller {
 	{
 		$example = $post;
 
+		$as_array = array('EndPoint' => $post['EndPoint']);
+
 		foreach ($example['Want'] as $requested_uuid => $last_msg)
 		{
 			$formatted_uuid = str_replace("-", "", strtolower($requested_uuid));
-			$example['Want'][$formatted_uuid] = "" . $last_msg;
+			$as_array['Want'][$formatted_uuid] = "" . $last_msg;
 			unset($example['Want'][$requested_uuid]);
 		}
 
 		// Save peer data
 		$peers = $this->get_peers();
-		$peers[$example['EndPoint']]['EndPoint'] = $example['EndPoint'];
-		// $peers[$example['EndPoint']]['TheyHave'] = $example['Want'];
+		$peers[$as_array['EndPoint']]['EndPoint'] = $as_array['EndPoint'];
+		$peers[$as_array['EndPoint']]['TheyHave'] = $as_array['Want'];
 
 		$fh = fopen("peers.json", 'w') or die("Error opening output file");
 		fwrite($fh, json_encode($peers));
 		fclose($fh);
 
-		foreach ($example['Want'] as $requested_uuid => $last_msg)
+		foreach ($as_array['Want'] as $requested_uuid => $last_msg)
 		{
 			$peer = $this->lookup_peer($requested_uuid);
 
