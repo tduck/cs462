@@ -99,11 +99,11 @@ class Lab5 extends CI_Controller {
 				
 				// Write updated rumor message data back to file
 				$fh = fopen("messages.json", 'w') or die("Error opening output file");
-				fwrite($fh, json_encode($json, JSON_PRETTY_PRINT));
+				fwrite($fh, json_encode($json));
 				fclose($fh);
 
 				$fh = fopen("ordered_messages.json", 'w') or die("Error opening output file");
-				fwrite($fh, json_encode($ordered_json, JSON_PRETTY_PRINT));
+				fwrite($fh, json_encode($ordered_json));
 				fclose($fh);
 
 				// Check the peer who sent the message
@@ -124,7 +124,7 @@ class Lab5 extends CI_Controller {
 
 				// Save peer data
 				$fh = fopen("peers.json", 'w') or die("Error opening output file");
-				fwrite($fh, json_encode($peers, JSON_PRETTY_PRINT));
+				fwrite($fh, json_encode($peers));
 				fclose($fh);
 			}
 
@@ -401,7 +401,7 @@ class Lab5 extends CI_Controller {
 
 		// Save peer data
 		$fh = fopen("peers.json", 'w') or die("Error opening output file");
-		fwrite($fh, json_encode($json, JSON_PRETTY_PRINT));
+		fwrite($fh, json_encode($json));
 		fclose($fh);
 
 		// $this->index();
