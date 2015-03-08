@@ -65,7 +65,7 @@ class Lab5 extends CI_Controller {
 
 		// An empty JSON message means that the peer has everything we have
 		// (This prevents infinite loops)
-		if ($message != "[]")
+		if ($q != NULL && $message != "[]")
 		{
 			$this->send($q['EndPoint'], $message);
 		}
@@ -231,7 +231,7 @@ class Lab5 extends CI_Controller {
 
 		$stored_messages = $this->get_messages();
 
-		if ($msg_type == -1)
+		if ($msg_type === -1)
 			$msg_type = rand(0, 1);
 
 
@@ -366,6 +366,11 @@ class Lab5 extends CI_Controller {
 		$peers = $this->get_peers();
 
 		if ($peers === NULL)
+			return NULL;
+
+		// Don't send requests to self
+		unset($peers[site_url('lab5/receive_message')]);
+		if (empty($peers))
 			return NULL;
 
 		$keys = array_keys($this->get_peers());
