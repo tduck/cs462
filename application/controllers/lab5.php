@@ -95,15 +95,15 @@ class Lab5 extends CI_Controller {
 					if (!isset($json[$sender_uuid][$message_index]))
 					{
 						$json[$sender_uuid][$message_index] = json_encode($post['Rumor']);
+						$ordered_json["" . microtime(true)] = json_encode($post['Rumor']);
 					}
 				}
 
 				else
 				{
 					$json[$sender_uuid] = array($message_index => json_encode($post['Rumor']));
+					$ordered_json["" . microtime(true)] = json_encode($post['Rumor']);
 				}
-
-				$ordered_json["" . microtime(true)] = json_encode($post['Rumor']);
 				
 				// Write updated rumor message data back to file
 				$fh = fopen("messages.json", 'w') or die("Error opening output file");
