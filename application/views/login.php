@@ -6,7 +6,7 @@
 <?php if (isset($message)) echo $message; ?>
 </div>
 
-<form action='../users/login' method="POST">
+<form action='<?php echo site_url("users/login"); ?>' method="POST">
 
 	<table>
 		<tr>
