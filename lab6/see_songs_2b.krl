@@ -11,7 +11,7 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
 
   rule songs is active {
     select when echo message input "(.*)" setting(m) 
-    	and echo message msg_type "song"
+      and echo message msg_type "song"
     send_directive("sing") with
       song = m;
     always {
@@ -24,11 +24,9 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
     select when explicit sung song re#god#i setting(s)
     send_directive("find_hymn") with
      song = s;
-    fired {
-      log <<Find_hymn song: #{s} >>
-    }
     always {
       raise explicit event "found_hymn";
+      log "Find_hymn song: #{s} "
     }
   }
 }
