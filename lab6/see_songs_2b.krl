@@ -15,8 +15,8 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
     send_directive("sing") with
       song = m;
     always {
-      raise explicit event "sung" with
-        song = m;
+      raise explicit event "sung" with song = m;
+      log "Songs: #{m} "
     }
   } 
 
