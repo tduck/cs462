@@ -1,4 +1,4 @@
-ruleset part1a {
+ruleset echo {
   meta {
     name "Lab 6 - Part 1a"
     description <<
