@@ -22,10 +22,10 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     }
 
     secular_music = function(x) { 
-      result = ent:songs.difference(ent:songs.filter(
+      result = ent:songs.filter(
         function(x) { 
-          x{"song"}.match(re/god/i)
-        }))
+          not ent:hymns >< x
+        })
       result.encode()
     }
   }
