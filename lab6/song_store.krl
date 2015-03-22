@@ -6,8 +6,8 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
 >>
     author "Tyler Duckworth"
     logging on
-    sharing on
-    provides hymns, secular_music
+    sharing off
+    provides songs, hymns, secular_music
   }
 
   global {
