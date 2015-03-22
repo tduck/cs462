@@ -15,18 +15,17 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
     send_directive("sing") with
       song = m;
     always {
-      raise explicit event "sung" with song = m;
+      raise explicit event "sung" with song = m and song_time = time:new();
       log "Songs: #{m} "
     }
   } 
 
   rule find_hymn is active {
-    select when explicit sung song re#god#i setting(s)
-    send_directive("find_hymn") with
-     song = s;
+    select when explicit sung song re#god#i setting(s) and explicit sung song_time "(.*)" setting(t)
+    noop();
     always {
-      raise explicit event "found_hymn";
-      log "Find_hymn song: #{s} "
+      raise explicit event "found_hymn" with hymn = s and hymn_time = t;
+      log "Find_hymn song: #{s} #{t}"
     }
   }
 }
