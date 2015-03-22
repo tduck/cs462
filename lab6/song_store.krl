@@ -13,7 +13,11 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
   global {
     songs = function() { ent:songs.encode() } 
     hymns = function() { ent:hymns.encode() }
-    secular_music = function(x) { ent:songs.difference(ent:hymns) }
+    secular_music = function(x) { ent:songs.difference(ent:songs.filter(
+      function(x) { 
+        x{"song"}.match(re/god/i)
+      })) 
+    }
   }
 
   rule collect_songs is active {
