@@ -39,7 +39,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     noop();
     always {
       set ent:songs new_song;
-      log "Added song: #{new_song}"
+      log "Added song: " + new_song.encode()
     }
   }
 
@@ -52,7 +52,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     noop();
     always {
       set ent:hymns new_hymn;
-      log "Added hymn: #{new_hymn}"
+      log "Added hymn: " + new_hymn.encode()
     }  
   }
 
