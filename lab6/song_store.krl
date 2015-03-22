@@ -24,7 +24,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     secular_music = function(x) { 
       result = ent:songs.filter(
         function(x) { 
-          not x like re/god/i
+          not x{"song"} like re#god#i
         })
       result.encode()
     }
