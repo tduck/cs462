@@ -13,7 +13,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
   global {
     songs = function() { 
       result = ent:songs || [];
-      result
+      result.encode({"pretty" : "true"})
     } 
 
     hymns = function() { 
@@ -24,7 +24,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     secular_music = function(x) { 
       result = ent:songs.filter(
         function(x) { 
-          not x[0].match(re#god#i)
+          not x{"song"}.match(re#god#i)
         });
       result.encode({"pretty" : "true"})
     }
