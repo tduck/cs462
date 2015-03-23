@@ -12,47 +12,47 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
 
   global {
     songs = function() { 
-      result = ent:songs || []
-      result.encode()
+      result = ent:songs || {};
+      result.encode({"pretty" : "true"})
     } 
 
     hymns = function() { 
-      result = ent:hymns || []
-      result.encode()
+      result = ent:hymns || {};
+      result.encode({"pretty" : "true"})
     }
 
     secular_music = function(x) { 
       result = ent:songs.filter(
         function(x) { 
           not x{"song"}.match(re#god#i)
-        })
-      result.encode()
+        });
+      result.encode({"pretty" : "true"})
     }
   }
 
   rule collect_songs is active {
     select when explicit sung
     pre {
-      all_songs = ent:songs || [];
+      all_songs = ent:songs || {};
       new_song = all_songs.union([{"song" : event:attr("song"), "song_time" : event:attr("song_time")}]);
     }
     noop();
     always {
       set ent:songs new_song;
-      log "Added song: " + new_song.encode()
+      log "Added song: " + new_song.encode({"pretty" : "true"})
     }
   }
 
   rule collect_hymns is active {
     select when explicit found_hymn
     pre {
-      all_hymns = ent:hymns || [];
+      all_hymns = ent:hymns || {};
       new_hymn = all_hymns.union([{"hymn" : event:attr("hymn"), "hymn_time" : event:attr("hymn_time")}]);
     }
     noop();
     always {
       set ent:hymns new_hymn;
-      log "Added hymn: " + new_hymn.encode()
+      log "Added hymn: " + new_hymn.encode({"pretty" : "true"})
     }  
   }
 
