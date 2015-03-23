@@ -13,7 +13,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
   global {
     songs = function() { 
       result = ent:songs || [];
-      result.encode({"pretty" : "true"})
+      result
     } 
 
     hymns = function() { 
