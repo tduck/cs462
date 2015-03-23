@@ -24,7 +24,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     secular_music = function(x) { 
       result = ent:songs.filter(
         function(x) { 
-          not x{"song"}.match(re#god#i)
+          not x[0].match(re#god#i)
         });
       result.encode({"pretty" : "true"})
     }
@@ -33,8 +33,8 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
   rule collect_songs is active {
     select when explicit sung
     pre {
-      all_songs = ent:songs || {};
-      new_song = all_songs.union([{"song" : event:attr("song"), "song_time" : event:attr("song_time")}]);
+      all_songs = ent:songs || [];
+      new_song = all_songs.union([[event:attr("song"), event:attr("song_time")]]);
     }
     noop();
     always {
@@ -46,8 +46,8 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
   rule collect_hymns is active {
     select when explicit found_hymn
     pre {
-      all_hymns = ent:hymns || {};
-      new_hymn = all_hymns.union([{"hymn" : event:attr("hymn"), "hymn_time" : event:attr("hymn_time")}]);
+      all_hymns = ent:hymns || [];
+      new_hymn = all_hymns.union([[event:attr("hymn"), event:attr("hymn_time")]]);
     }
     noop();
     always {
