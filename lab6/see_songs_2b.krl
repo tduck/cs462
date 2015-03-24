@@ -21,7 +21,7 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
   } 
 
   rule find_hymn is active {
-    select when explicit sung song.match(re/god/i) setting(hymn_title)
+    select when explicit sung where song.match(re/god/i) setting(hymn_title)
     send_directive("find_hymn") with
       hymn = hymn_title;
     always {
