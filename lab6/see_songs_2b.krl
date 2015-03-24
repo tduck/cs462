@@ -15,7 +15,7 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
     send_directive("sing") with
       song = m;
     always {
-      raise explicit event "sung" with song = m and song_time = time:new();
+      raise explicit event "sung" with song = m;
       log "Songs: #{m} "
     }
   } 
@@ -25,7 +25,7 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
     send_directive("find_hymn") with
       hymn = hymn_title;
     always {
-      raise explicit event "found_hymn" with hymn = hymn_title and hymn_time = time:new();
+      raise explicit event "found_hymn" with hymn = hymn_title;
       log "Find_hymn song: #{hymn_title} "
     }
   }

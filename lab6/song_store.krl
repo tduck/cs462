@@ -34,7 +34,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     select when explicit sung
     pre {
       all_songs = ent:songs || [];
-      new_song = all_songs.append([[event:attr("song"), event:attr("song_time")]]);
+      new_song = all_songs.append([[event:attr("song"), time:new()]]);
     }
     noop();
     always {
@@ -47,7 +47,7 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     select when explicit found_hymn
     pre {
       all_hymns = ent:hymns || [];
-      new_hymn = all_hymns.append([[event:attr("hymn"), event:attr("hymn_time")]]);
+      new_hymn = all_hymns.append([[event:attr("hymn"), time:new()]]);
     }
     noop();
     always {
