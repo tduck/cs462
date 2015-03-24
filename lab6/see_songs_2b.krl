@@ -21,7 +21,7 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
   } 
 
   rule find_hymn is active {
-    select when explicit sung song re#god#i song_time "(.*)" setting(s, t)
+    select when explicit sung song "re/god/i" song_time "(.*)" setting(s, t)
     noop();
     always {
       raise explicit event "found_hymn" with hymn = s and hymn_time = t;
