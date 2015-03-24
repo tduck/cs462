@@ -26,7 +26,7 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
       song = s;
     always {
       raise explicit event "found_hymn" with hymn = s and hymn_time = time:new();
-      log "Find_hymn song: #{s} #{t}"
+      log "Find_hymn song: #{s} "
     }
   }
 }
