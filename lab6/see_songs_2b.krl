@@ -30,9 +30,7 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
       hymn = song_title;
     always {
       if (song_title.match(re#god#i))
-      {
         raise explicit event "found_hymn" with hymn = song_title;
-      }
       log "Find_hymn song: #{song_title} "
     }
   }
