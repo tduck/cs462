@@ -34,12 +34,13 @@ Song Store: Ruleset for CS 452 Lab 6, Part 3
     select when explicit sung
     pre {
       all_songs = ent:songs || {};
-      new_song = all_songs.union([{"song" : event:attr("song"), "song_time" : event:attr("song_time")}.encode()]);
+      to_add = {"song" : event:attr("song"), "song_time" : event:attr("song_time")}.encode();
+      new_song = all_songs.union([to_add]);
     }
     noop();
     always {
       set ent:songs new_song;
-      log "Added song: " + new_song.encode({"pretty" : "true"})
+      log "Added song: " + to_add;
     }
   }
 
