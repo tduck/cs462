@@ -21,12 +21,12 @@ See Songs: Ruleset for CS 452 Lab 6, Part 2b
   } 
 
   rule find_hymn is active {
-    select when explicit sung song re#god#i setting(s, t)
+    select when explicit sung song re#god#i setting(hymn_title)
     send_directive("find_hymn") with
-      hymn = s;
+      hymn = hymn_title;
     always {
-      raise explicit event "found_hymn" with hymn = s and hymn_time = time:new();
-      log "Find_hymn song: #{s} "
+      raise explicit event "found_hymn" with hymn = hymn_title and hymn_time = time:new();
+      log "Find_hymn song: #{hymn_title} "
     }
   }
 }
